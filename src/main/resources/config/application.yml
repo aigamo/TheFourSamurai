@@ -1,0 +1,13 @@
+server:
+  port: 8080
+  tomcat:
+    access-log-enabled: true
+    access-log-pattern: '%h %l %u %t "%r" %s %b %D "%{User-Agent}i" %S'
+    basedir: /tmp
+
+spring:
+  profiles.active: development
+  thymeleaf:
+    cache: false
+    mode: LEGACYHTML5
+    encoding: UTF-8
