@@ -2,19 +2,14 @@ package jp.technoco.thefoursamurai.sound;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.Arrays;
 
 import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.TargetDataLine;
 
-import org.apache.commons.math3.complex.Complex;
-import org.apache.commons.math3.transform.DftNormalization;
-import org.apache.commons.math3.transform.FastFourierTransformer;
-import org.apache.commons.math3.transform.TransformType;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class SoundTest2 extends Thread {
@@ -33,6 +28,7 @@ public class SoundTest2 extends Thread {
     }
 
     @Test
+    @Ignore
     public void init() {
 
         //   // 実験用ダミー
@@ -71,15 +67,9 @@ public class SoundTest2 extends Thread {
             sourceDataline.open(audioFormat);
 
             System.out.println("録音->再生 開始");
+            sourceDataline.start();
+            targetDataLine.start();
             for (;;) {
-                sourceDataline.start();
-                targetDataLine.start();
-
-                //          // 実験用ダミー（今は無効）
-                //          if(flag){
-                //            sourceDataline.write(dm, 0, dm.length);
-                //            //  flag=false; // 一度だけダミーを挟むとき
-                //          }
 
                 // sourceDataline.write(au_data, 0, targetDataLine.read(au_data, 0, au_data.length));
                 targetDataLine.read(au_data, 0, au_data.length);

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="Shift_JIS">
+<TITLE>あいうえお</TITLE>
+</head>
+<body>
+<input type="button" onclick="speak('おはようございます','ja-JP')" value="日本語">
+<input type="button" onclick="speak('hello','en-US')" value="English">
+
+<SCRIPT>
+function speak(text,lang) {
+    var synthes = new SpeechSynthesisUtterance();
+    synthes.volume = 1;
+    synthes.rate = 1;
+    synthes.pitch = 1;
+    synthes.text = text;
+    synthes.lang = lang;
+    speechSynthesis.speak(synthes);
+}
+</script>
+</body>
+</html>
