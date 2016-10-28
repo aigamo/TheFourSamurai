@@ -1,0 +1,14 @@
+{
+  "test":[
+    {"boketsukkomi":"1","laughrate":10},
+    {"boketsukkomi":"2","laughrate":30},
+    {"boketsukkomi":"3","laughrate":50},
+    {"boketsukkomi":"4","laughrate":70},
+    {"boketsukkomi":"5","laughrate":80},
+    {"boketsukkomi":"6","laughrate":90},
+    {"boketsukkomi":"7","laughrate":100},
+    {"boketsukkomi":"8","laughrate":60},
+    {"boketsukkomi":"9","laughrate":70},
+    {"boketsukkomi":"10","laughrate":80}
+  ]
+}
