@@ -4,12 +4,12 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.TargetDataLine;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class SoundTest2 extends Thread {
@@ -28,6 +28,7 @@ public class SoundTest2 extends Thread {
     }
 
     @Test
+    @Ignore
     public void init() {
 
         //   // 実験用ダミー
@@ -66,37 +67,49 @@ public class SoundTest2 extends Thread {
             sourceDataline.open(audioFormat);
 
             System.out.println("録音->再生 開始");
-
             sourceDataline.start();
             targetDataLine.start();
-            int[] values = null;
             for (;;) {
-
-                //          // 実験用ダミー（今は無効）
-                //          if(flag){
-                //            sourceDataline.write(dm, 0, dm.length);
-                //            //  flag=false; // 一度だけダミーを挟むとき
-                //          }
 
                 // sourceDataline.write(au_data, 0, targetDataLine.read(au_data, 0, au_data.length));
                 targetDataLine.read(au_data, 0, au_data.length);
                 //System.out.println(au_data.length);
 
-                AudioInputStream linearStream = new AudioInputStream(targetDataLine);
-                int mount = (int) (audioFormat.getSampleRate() * sec);
+                // AudioInputStream linearStream = new AudioInputStream(targetDataLine);
+                //  int mount = (int) (audioFormat.getSampleRate() * sec);
+                //System.out.println("mount" + mount);
+                //  double[] values = new double[mount];
+                //    System.out.println((int) ByteBuffer.wrap(au_data).order(ByteOrder.LITTLE_ENDIAN).getShort());
 
-                // 音声データの取得
-                values = new int[mount];
                 int data = (int) ByteBuffer.wrap(au_data).order(ByteOrder.LITTLE_ENDIAN).getShort();
+                if (data < 0) {
+                    data = data * -1;
+                }
                 System.out.println(data);
-               // int data = linearStream.read(au_data);
+                //  for (int i = 0; i < mount; mount++) {
+                // 音声データの取得
 
+                //  values[i] = data;
+                ///   System.out.println(data);
+
+                //   System.out.println((int) ByteBuffer.wrap(au_data).order(ByteOrder.LITTLE_ENDIAN).getShort());
+                //   }
+
+                //  FastFourierTransformer fft = new FastFourierTransformer(DftNormalization.STANDARD);
+                //   Complex[] complexs = fft.transform(values, TransformType.FORWARD);
+
+                //     Arrays.asList(complexs).forEach(i -> {
+                //  System.out.println(i.getReal());
+                //     });
+
+                // int data = linearStream.read(au_data);
                 // int data = targetDataLine.read(au_data, 0, au_data.length);
 
                 // System.out.println(data);
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("error:" + e);
         }
     }

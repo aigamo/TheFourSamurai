@@ -2,7 +2,6 @@ package jp.technoco.thefoursamurai.sound;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.net.DatagramPacket;
 
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
@@ -11,11 +10,13 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.TargetDataLine;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class SoundTest {
 
     @Test
+    @Ignore
     public void test() {
         // リニアPCM 16bit 8000Hz × 10秒間 = 160000byte
         byte[] voiceData = new byte[160000];
