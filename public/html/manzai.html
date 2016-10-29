@@ -5,9 +5,27 @@
         <title></title>
         <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
         <STYLE type="text/css">
+            body {
+                background-image: url("bg.jpg");
+                background-size: cover;
+                
+                
+            }
+            h1 {
+                display: inline;
+            }
+            .head {
+                padding: 10px;
+                text-align: center;
+                width: 100%;
+                color: white;
+                position: fixed;
+                left: 0;
+                top: 0;
+                background-color: black;
+            }
             .boke_text, .tsukkomi_text {
                 width: 100%;
-                
             }
             .boke_text {
                 text-align: right;                
@@ -26,16 +44,21 @@
                 background-color: lightgreen;
             }
             .tsukkomi {
-                background-color: whitesmoke;                
-
+                background-color: whitesmoke;
+            }
+            .scrollmargin {
+                height: 50px;
             }
         </STYLE>        
         
     </head>
     <body>
-        <h1>Watson お笑い養成所</h1>
-        <input type="button" id="recordButton" value="開始">
+        <div class="head">
+            <h1>Watson お笑い養成所</h1>
+            <input type="button" id="recordButton" value="しゃべる">            
+        </div>
         <div class="scroll">
+            <div class="scrollmargin"></div>
             <div id="boke_text">
 <!--
                 <div class="bokeline"><div class='boke'>こんにちは</div></div>
@@ -43,15 +66,17 @@
                 <div class="bokeline"><div class='boke'>こんにちは</div></div>
 -->
             </div>
+<!--
             <div id="tsukkomi_text">
-<!--                <div class='tsukkomi'>あいうだsもだのdのおおおおおおおおおお</div>-->
+                <div class='tsukkomi'>あいうだsもだのdのおおおおおおおおおお</div>
             </div>
+-->
         </div>
     </body>
     <script type="text/javascript">        
         $(document).ready(function(){
             $("#recordButton").click(function(){
-                $("#recordButton").val("停止");
+                $("#recordButton").val("認識中");
                 // 音声をテキストに変換し、ボケに入れる
                 record();
             });
@@ -67,6 +92,7 @@
     recognition.addEventListener('result', function(event) {
         var text = event.results.item(0).item(0).transcript;
         $("#boke_text").append($("<div class='boke'>").text(text));
+        $("#boke_text").append($("<br>"));
         callWatson();
     }, false);
 
@@ -109,11 +135,15 @@
                 
             } else {
                 // ボケが見つからない
-                tsukkomi = "ボケが見つかりませんでした"
+                tsukkomi = "声小さいわ！もっかい言ってくれんか？"
             }
             
-            $("#tsukkomi_text").append($("<div class='tsukkomi'>").text(tsukkomi));
+            $("#boke_text").append($("<div class='tsukkomi'>").text(tsukkomi));
+            $("#boke_text").append($("<br>"));
             speak(tsukkomi,'ja-JP');
+    $('body').delay(100).animate({
+      scrollTop: $(document).height()
+    },1500);        
         }).fail(function(error){
             console.log(error);
         })        
