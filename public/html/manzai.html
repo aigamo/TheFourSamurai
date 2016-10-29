@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+        <STYLE type="text/css">
+            .boke_text, .tsukkomi_text {
+                width: 100%;
+                
+            }
+            .boke_text {
+                text-align: right;                
+            }
+            .boke, .tsukkomi {
+                border-radius: 20px;                
+                font-size: 40px;
+                padding: 15px;
+                
+                margin: 15px;
+                
+                display: inline-block;
+            }
+            .boke {
+                text-align:right;                                
+                background-color: lightgreen;
+            }
+            .tsukkomi {
+                background-color: whitesmoke;                
+
+            }
+        </STYLE>        
+        
+    </head>
+    <body>
+        <h1>Watson お笑い養成所</h1>
+        <input type="button" id="recordButton" value="開始">
+        <div class="scroll">
+            <div id="boke_text">
+<!--
+                <div class="bokeline"><div class='boke'>こんにちは</div></div>
+                <div class="bokeline"><div class='boke'>こんにちは</div></div>
+                <div class="bokeline"><div class='boke'>こんにちは</div></div>
+-->
+            </div>
+            <div id="tsukkomi_text">
+<!--                <div class='tsukkomi'>あいうだsもだのdのおおおおおおおおおお</div>-->
+            </div>
+        </div>
+    </body>
+    <script type="text/javascript">        
+        $(document).ready(function(){
+            $("#recordButton").click(function(){
+                $("#recordButton").val("停止");
+                // 音声をテキストに変換し、ボケに入れる
+                record();
+            });
+        });
+    </script>
+    <script type="text/javascript">
+    window.SpeechRecognition = window.SpeechRecognition
+            || webkitSpeechRecognition;
+    var recognition = new webkitSpeechRecognition();
+    recognition.lang = 'ja';
+
+    // 録音終了時トリガー
+    recognition.addEventListener('result', function(event) {
+        var text = event.results.item(0).item(0).transcript;
+        $("#boke_text").append($("<div class='boke'>").text(text));
+        callWatson();
+    }, false);
+
+    // 録音開始
+    function record() {
+        recognition.start();
+    }
+    function speak(text,lang) {
+        var synthes = new SpeechSynthesisUtterance();
+        synthes.volume = 1;
+        synthes.rate = 1;
+        synthes.pitch = 1;
+        synthes.text = text;
+        synthes.lang = lang;
+        speechSynthesis.speak(synthes);
+    }        
+           
+    function callWatson() {
+        $("#recordButton").val("開始");
+        // テキストをWatsonに投げる
+        $.ajax({
+            type: "GET",
+            url: "http://manzai.mybluemix.net/manzai",
+            cache: false,
+            dataType: "json",
+            data: {
+                q: $("#boke_text").text()
+            }
+        }).done(function(data){
+            
+            
+            var tsukkomi = "";
+            
+            var docList = data.response.docs;
+            if (docList.length > 0) {
+                var doc = docList[Math.floor(Math.random() * docList.length)];
+                // ボケが見つかった
+                tsukkomi = doc.tsukkomi;
+
+                
+            } else {
+                // ボケが見つからない
+                tsukkomi = "ボケが見つかりませんでした"
+            }
+            
+            $("#tsukkomi_text").append($("<div class='tsukkomi'>").text(tsukkomi));
+            speak(tsukkomi,'ja-JP');
+        }).fail(function(error){
+            console.log(error);
+        })        
+    }
+    </script>
+</html>
