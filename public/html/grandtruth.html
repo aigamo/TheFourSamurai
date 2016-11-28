@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Groundtruth</title>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <style type="text/css">
+      body {
+        font-size: small;
+      }
+      #query {
+        width: 95%;
+      }
+      #header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        padding: 0.2em;
+        background-color: gray;
+      }
+      .doc {
+        border: 1px solid gray;
+        border-radius: 0.2em;
+        margin: 0.2em;
+        padding: 0.2em;
+      }
+      #result {
+        margin-top: 4em;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="header">
+      <input id="query" type="text" placeholder="質問文"><br>
+      <input id="send" type="button" value="候補表示">
+      <input id="getgt" type="button" value="Groundtruth取得">
+      <a id="downloadlink" target="_blank" href="#"></a>
+    </div>
+    <div id="result"></div>
+  </body>
+  <script type="text/javascript">
+    var MAX_USEFUL=4;
+    var groundtruth={};
+
+    $("#send").click(function(){
+      var $result=$("#result");
+      $result.empty();
+
+      var $query=$("#query");      
+      $.ajax({
+        type: "GET",
+        url: "http://samurai.mybluemix.net/manzai",
+        dataType: "json",
+        data: {
+          q: $query.val()
+        }
+      }).done(function(data){
+        var docs = data.response.docs;
+        if (docs.length > 0) {
+          docs.forEach(function(doc){
+            var $doc=$("<div>").addClass("doc").data({ 
+              "query": data.responseHeader.params.q,
+              "doc": doc 
+            });
+
+            $doc.append($("<input>").attr({
+              "id": "useful",
+              "type": "button",
+              "value": doc.id,
+            }).click(function(){ clickUseful($doc); }));
+
+            $doc.append($("<span>").addClass("counter"));
+            $doc.append($("<div>").text(doc.body));            
+
+            $result.append($doc);
+          });
+        } else {
+          $result.text("結果が見つかりませんでした。");
+        }
+      }).fail(function(error){
+          console.log(error);
+      });      
+    });
+
+    $("#getgt").click(function(){
+      var rows=[];
+      $.each(groundtruth,function(query, idList){
+        var row=[];
+        row.push(query);
+        $.each(idList,function(id, count){
+          row.push(id);
+          row.push(count);
+        });
+        rows.push(row.map(function(value){ return escapeCSV(String(value)) }).join(","));
+      });
+      rows.push("");
+
+      var blob = new Blob([rows.join("\n")], { "type": "text/plain" });
+      var $downloadlink=$("#downloadlink");
+      $downloadlink.attr("href", window.URL.createObjectURL(blob));
+      $downloadlink.attr("download", "gt_" + createTimeString() + ".csv");
+      $downloadlink[0].click();
+    });
+
+    function clickUseful($doc) {
+      var query=$doc.data("query");
+      var id=$doc.data("doc").id;
+      if (groundtruth[query] === undefined) {
+        groundtruth[query]={};
+      }
+
+      var count=(groundtruth[query][id] === undefined ? 0 : groundtruth[query][id]);
+      count=Math.min(count + 1, MAX_USEFUL);
+      groundtruth[query][id]=count;
+
+      $doc.find(".counter").text(count);
+      if (count >= MAX_USEFUL) {
+        $doc.find("#useful").prop("disabled", true);        
+      }      
+    }
+
+    function escapeCSV(value) {
+      return "\"" + value.replace(/\"/, "\"\"") + "\"";
+    }
+    function createTimeString() {
+      function padZero(num) {
+          var result;
+          if (num < 10) {
+              result = "0" + num;
+          } else {
+              result = "" + num;
+          }
+          return result;
+      }
+      var now = new Date();
+      var res = "" + now.getFullYear() + padZero(now.getMonth() + 1) + 
+          padZero(now.getDate()) + padZero(now.getHours()) + 
+          padZero(now.getMinutes()) + padZero(now.getSeconds());
+      return res;
+    }
+  </script>
+</html>
