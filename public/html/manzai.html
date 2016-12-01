@@ -88,9 +88,12 @@
     var recognition = new webkitSpeechRecognition();
     recognition.lang = 'ja';
 
+    var bokeText = '';
+
     // 録音終了時トリガー
     recognition.addEventListener('result', function(event) {
         var text = event.results.item(0).item(0).transcript;
+        bokeText = text;
         $("#boke_text").append($("<div class='boke'>").text(text));
         $("#boke_text").append($("<br>"));
         callWatson();
@@ -115,15 +118,13 @@
         // テキストをWatsonに投げる
         $.ajax({
             type: "GET",
-            url: "http://samurai.mybluemix.net/manzai",
+            url: "https://samurai.mybluemix.net/manzai",
             cache: false,
             dataType: "json",
             data: {
-                q: $("#boke_text").text()
+                q: bokeText
             }
         }).done(function(data){
-            
-            
             var tsukkomi = "";
             
             var docList = data.response.docs;
@@ -140,6 +141,8 @@
             
             $("#boke_text").append($("<div class='tsukkomi'>").text(tsukkomi));
             $("#boke_text").append($("<br>"));
+            //$("#boke_text").empty();
+            bokeText = '';
             speak(tsukkomi,'ja-JP');
     $('body').delay(100).animate({
       scrollTop: $(document).height()

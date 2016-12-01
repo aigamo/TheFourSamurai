@@ -57,15 +57,15 @@ HelloStomp.prototype.disconnect = function() {
 
 HelloStomp.prototype.dataArray = [ [] ];
 
-var dataArray = [];
+var dataArray = [ ];
 
 HelloStomp.prototype.initChart = function() {
     // var df = $.Deferred();
 
     this.dataArray = [ [ 'date', 'LaughRate' ] ];
-    // for (var i = 0; i < 10; i++) {
-    // this.dataArray.push([ 0, 0 ]);
-    // }
+    //for (var i = 0; i < 3; i++) {
+    //    this.dataArray.push([ 0, 0 ]);
+   // }
     var options = {
         title : 'Laugh Graph',
         hAxis : {
@@ -96,6 +96,7 @@ HelloStomp.prototype.drowChart = function(message) {
 
     var data_item = [ parseInt(data.now), parseInt(data.data) ];
     dataArray.push(data_item);
+    //dataArray.shift();
 
     var chartdata = google.visualization.arrayToDataTable(dataArray);
 
@@ -116,7 +117,7 @@ HelloStomp.prototype.drowChart = function(message) {
         }
 
     };
-    chart.draw(chartdata,options);
+    chart.draw(chartdata, options);
 };
 
 (function() {
