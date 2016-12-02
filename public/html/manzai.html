@@ -129,7 +129,8 @@
             var tsukkomiName = "";
             var docList = data.response.docs;
             if (docList.length > 0) {
-                var doc = docList[Math.floor(Math.random() * docList.length)];
+                //var doc = docList[Math.floor(Math.random() * docList.length)];
+                var doc = docList[0];
                 // ボケが見つかった
                 tsukkomi = doc.tsukkomi;
                 tsukkomiName = doc.tsukkomi_name;
