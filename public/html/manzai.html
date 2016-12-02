@@ -126,20 +126,22 @@
             }
         }).done(function(data){
             var tsukkomi = "";
-            
+            var tsukkomiName = "";
             var docList = data.response.docs;
             if (docList.length > 0) {
                 var doc = docList[Math.floor(Math.random() * docList.length)];
                 // ボケが見つかった
-                tsukkomi = doc.tsukkomi_name + " : " + doc.tsukkomi;
+                tsukkomi = doc.tsukkomi;
+                tsukkomiName = doc.tsukkomi_name;
 
                 
             } else {
                 // ボケが見つからない
-                tsukkomi = "ワトソン君 : 声小さいわ！もっかい言ってくれんか？"
+                tsukkomi = "声小さいわ！もっかい言ってくれんか？"
+                tsukkomiName = "ワトソン君";
             }
             
-            $("#boke_text").append($("<div class='tsukkomi'>").text(tsukkomi));
+            $("#boke_text").append($("<div class='tsukkomi'>").text(tsukkomiName + ":" + tsukkomi));
             $("#boke_text").append($("<br>"));
             //$("#boke_text").empty();
             bokeText = '';
