@@ -131,12 +131,12 @@
             if (docList.length > 0) {
                 var doc = docList[Math.floor(Math.random() * docList.length)];
                 // ボケが見つかった
-                tsukkomi = doc.tsukkomi;
+                tsukkomi = doc.tsukkomi_name + " : " + doc.tsukkomi;
 
                 
             } else {
                 // ボケが見つからない
-                tsukkomi = "声小さいわ！もっかい言ってくれんか？"
+                tsukkomi = "ワトソン君 : 声小さいわ！もっかい言ってくれんか？"
             }
             
             $("#boke_text").append($("<div class='tsukkomi'>").text(tsukkomi));
